@@ -226,6 +226,7 @@ void process_socket(int sd) {
 				case PKG_MTH_GET_DEV_CONF:
 					pkg->header.pkg_type = MTH_RET;
 					print_timestr(stderr);
+					memset((char *)pkg->mth_data.mth_val, 0, sizeof(pkg->mth_data.mth_val));
 					if (get_config(get_mac(inet_ntoa(ca.sin_addr)), (char *)pkg->mth_data.mth_val, \
 						sizeof(pkg->mth_data.mth_val)) == 0) {
 						sendto(sd, buf, 1024, 0, (void *)&ca, sizeof(ca));
