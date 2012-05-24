@@ -1,14 +1,14 @@
 10
 
 dir
-154
+155
 https://192.168.0.1/svn/T01/2.2B/Server/conf
 https://192.168.0.1/svn/T01
 
 
 
-2012-05-23T10:16:49.123065Z
-154
+2012-05-24T01:30:06.096726Z
+155
 yumingming
 
 
@@ -28,14 +28,14 @@ yumingming
 
 make-conf.sh
 file
-155
+157
 
 
 
-2012-05-24T01:17:29.000000Z
-1234e3e90015d748bb8135c8523a0ff0
-2012-05-24T01:30:06.096726Z
-155
+2012-05-24T02:43:00.000000Z
+290dd5061720ada9446edc25c5e669b5
+2012-05-24T04:48:25.821806Z
+157
 yumingming
 has-props
 
@@ -58,7 +58,7 @@ has-props
 
 
 
-1196
+1197
 
 11083.ini
 file
@@ -96,6 +96,27 @@ yumingming
 
 conf-for-init
 dir
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
 
 7C-6A-DB-03-01-A1.ini
 file
