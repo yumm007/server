@@ -50,6 +50,11 @@ n=`grep "TOTAL IDs" $ONLINE_FILE -n | tail -n 1 | cut -d":" -f1`
 n=`expr $n - 1`
 sed "1,$n d" $ONLINE_FILE
 echo
+
+echo Total Off Line Counter
+grep -v "TOTAL" $ONLINE_FILE  |sed "s/\t/\n/g" | grep -v "^$" | grep OFF | sort -n | uniq -c | paste - - - - -
+echo
+
 ./make-one-record.sh $ONLINE_FILE $LOG_FILE
 
 rm -rf conf ap.list t01.list tmp_dir/ scan_num.log
