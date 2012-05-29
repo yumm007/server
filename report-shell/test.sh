@@ -1,6 +1,8 @@
 #!/bin/bash
 
-LOG_FILE=$1
+LOG_FILE=../log/`date +%F`-location.log
+ONLINE_FILE=../log/`date +%F`-online.log
+
 cut -b 22-26 $LOG_FILE | sort | uniq > t01.list
 n=`wc -l t01.list | cut -b -2`
 w=$n*280
@@ -44,5 +46,11 @@ done
 cat conf | gnuplot
 cat scan_num_ap.conf | gnuplot
 
-#rm -rf conf ap.list t01.list tmp_dir/ scan_num.log
+n=`grep "TOTAL IDs" $ONLINE_FILE -n | tail -n 1 | cut -d":" -f1`
+n=`expr $n - 1`
+sed "1,$n d" $ONLINE_FILE
+echo
+./make-one-record.sh $ONLINE_FILE $LOG_FILE
+
+rm -rf conf ap.list t01.list tmp_dir/ scan_num.log
 

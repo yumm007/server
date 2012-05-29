@@ -36,7 +36,7 @@ char * get_mac(const char *ip_addr) {
 	}
 	sin = (struct sockaddr_in *) &arpreq.arp_pa;
 	memcpy(sin, &ss, sizeof(struct sockaddr_in));
-	strcpy(arpreq.arp_dev, "eth0");
+	strcpy(arpreq.arp_dev, "wlan0");
 	arpreq.arp_ha.sa_family = AF_UNSPEC;
 	if (ioctl(sockfd, SIOCGARP, &arpreq) < 0) {
 		perror("ioctl SIOCGARP: ");
