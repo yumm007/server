@@ -123,9 +123,9 @@ static void open_fds(void) {
 				memcpy(&CONF_FILTER[i][0], "nul", 4);
 	}
 
-	LOG_FDS[TOTAL_ONLINE_LOG_FILE_ID] = fopen(append_file_name(&CONF_FILTER[TOTAL_ONLINE_LOG_FILE_ID][0]), "a+");
-	LOG_FDS[LOCATION_DATA_LOG_FILE_ID] = fopen(append_file_name(&CONF_FILTER[LOCATION_DATA_LOG_FILE_ID][0]), "a+");
-	LOG_FDS[CLIENT_ON_OFF_LOG_FILE_ID] = fopen(append_file_name(&CONF_FILTER[CLIENT_ON_OFF_LOG_FILE_ID][0]), "a+");
+	LOG_FDS[TOTAL_ONLINE_LOG_FILE_ID] = fopen(append_file_name(&CONF_FILTER[TOTAL_ONLINE_LOG_FILE_ID][0]), "w");
+	LOG_FDS[LOCATION_DATA_LOG_FILE_ID] = fopen(append_file_name(&CONF_FILTER[LOCATION_DATA_LOG_FILE_ID][0]), "w");
+	LOG_FDS[CLIENT_ON_OFF_LOG_FILE_ID] = fopen(append_file_name(&CONF_FILTER[CLIENT_ON_OFF_LOG_FILE_ID][0]), "w");
 	LOG_FDS[SEND_MSG_FROM_FILE_ID] = fopen(&CONF_FILTER[SEND_MSG_FROM_FILE_ID][0], "r");
 
 	cmd_d = fileno(LOG_FDS[SEND_MSG_FROM_FILE_ID]);

@@ -44,5 +44,5 @@ done
 cat conf | gnuplot
 cat scan_num_ap.conf | gnuplot
 
-rm -rf conf ap.list t01.list tmp_dir/ scan_num.log
+#rm -rf conf ap.list t01.list tmp_dir/ scan_num.log
 
