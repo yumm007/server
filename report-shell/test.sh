@@ -1,7 +1,16 @@
 #!/bin/bash
 
-LOG_FILE=../log/`date +%F`-location.log
-ONLINE_FILE=../log/`date +%F`-online.log
+if [ $# -ne 1 ]
+then 
+	LOG_FILE=../log/`date +%F`-location.log
+	ONLINE_FILE=../log/`date +%F`-online.log
+else
+	LOG_FILE=../log/`echo -n $1`-location.log
+	ONLINE_FILE=../log/`echo -n $1`-online.log
+fi
+
+#LOG_FILE=../log/`date +%F`-location.log
+#ONLINE_FILE=../log/`date +%F`-online.log
 
 cut -b 22-26 $LOG_FILE | sort | uniq > t01.list
 n=`wc -l t01.list | cut -b -2`
