@@ -57,7 +57,7 @@ cat scan_num_ap.conf | gnuplot
 
 n=`grep "TOTAL IDs" $ONLINE_FILE -n | tail -n 1 | cut -d":" -f1`
 n=`expr $n - 1`
-sed "1,$n d" $ONLINE_FILE
+sed "1,$n d" $ONLINE_FILE | tee t01_on_line.log
 echo
 
 echo Total Off Line Counter

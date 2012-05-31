@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#if 0
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -49,4 +50,14 @@ char * get_mac(const char *ip_addr) {
 	close(sockfd);
 	return mac_buf;
 }
+#else
 
+char * get_mac(const char *ip_addr) {
+	static char mac_buf[] = "00-00-00-00-00-00";
+	char *c = strchr(ip_addr, '=');
+
+	if (c != NULL)
+		memcpy(mac_buf, c+1, sizeof(mac_buf) - 1);
+	return mac_buf;
+}
+#endif

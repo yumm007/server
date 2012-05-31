@@ -56,7 +56,7 @@ void open_socket(void) {
 	bzero(&sa, sizeof(sa));
 	sa.sin_family = AF_INET;
 	sa.sin_addr.s_addr = htonl(INADDR_ANY);
-	sa.sin_port = htons(5079);		//should be from configrution file
+	sa.sin_port = htons(5069);		//should be from configrution file
 
 	if (bind(cmd_d, (const struct sockaddr *)&sa, sizeof(sa)) < 0) {
 		fprintf(stderr, "bind error.\n");
@@ -144,12 +144,17 @@ static int get_config(char *id, char *buf, int buf_size) {
 		return -1;
 	}
 
+	memset(buf, 0, buf_size);
 	while (CONF_LINE_MAX && fgets(line, CONF_LINE_MAX, fp) != NULL)
 		process_one_line(line, buf, buf_size);
 
 	fprintf(stderr, "send conf file %s for client ", file_path);
 
 	return 0;
+}
+
+static void cal_value_from_ap(char *buf) {
+	//fprintf(stderr, "%s\n", buf);
 }
 
 void process_socket(int sd) {
@@ -162,6 +167,11 @@ void process_socket(int sd) {
 
 	recvfrom(sd, buf, BUF_SIZE, 0, (void *)&ca, &sa_len);
 		
+	if (memcmp(buf, "mac(wlan0)", 9) == 0) {
+		cal_value_from_ap(buf);
+		return;
+	}
+
 	switch (pkg->header.pkg_type) {
 		case LOGIN_REQ:
 			break;
@@ -226,8 +236,9 @@ void process_socket(int sd) {
 				case PKG_MTH_GET_DEV_CONF:
 					pkg->header.pkg_type = MTH_RET;
 					print_timestr(stderr);
-					memset((char *)pkg->mth_data.mth_val, 0, sizeof(pkg->mth_data.mth_val));
-					if (get_config(get_mac(inet_ntoa(ca.sin_addr)), (char *)pkg->mth_data.mth_val, \
+					//memset((char *)pkg->mth_data.mth_val, 0, sizeof(pkg->mth_data.mth_val));
+					//if (get_config(get_mac(inet_ntoa(ca.sin_addr)), (char *)pkg->mth_data.mth_val, 
+					if (get_config(get_mac((char *)pkg->mth_data.mth_val), (char *)pkg->mth_data.mth_val, \
 						sizeof(pkg->mth_data.mth_val)) == 0) {
 						sendto(sd, buf, 1024, 0, (void *)&ca, sizeof(ca));
 						fprintf(stderr, "%s from IP %s.\n", (char *)pkg->id.pkg_from, inet_ntoa(ca.sin_addr));
