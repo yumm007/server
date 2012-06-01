@@ -16,8 +16,7 @@ cut -b 22-26 $LOG_FILE | sort | uniq > t01.list
 n=`wc -l t01.list | cut -b -2`
 w=$n*280
 
-cut -d';' -f 2,4 $LOG_FILE | sed "s/;/\n/" | cut -b 3- | sort | uniq > ap.list
-sed -i '/000000/d' ap.list
+cut -d';' -f 2,4 $LOG_FILE | sed "s/;/\n/" | cut -b 3- | sort | uniq | sed -e '/000000/d' -e '/00:00:00:00:00:00/d' > ap.list
 
 if [ ! -d tmp_dir ]; then
 	mkdir tmp_dir
