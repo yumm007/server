@@ -6,6 +6,7 @@
 #define PKG_MTH_GET_LCT_S 	"GetLocateData"
 #define PKG_MTH_GET_PSN_S 	"GetWorkerInfo"
 #define PKG_MTH_GET_DEV_CONF_S		"GetDevConfig"
+#define PKG_MTH_ACTIVE_S	"Active"
 
 typedef enum PKG_MTH_TYPE {
     PKG_MTH_UNKN,
@@ -14,6 +15,7 @@ typedef enum PKG_MTH_TYPE {
     PKG_MTH_GET_LCT,
     PKG_MTH_GET_PSN,
     PKG_MTH_GET_DEV_CONF,
+	 PKG_MTH_ACTIVE,
 } PKG_MTH_TYPE_T;
 
 typedef unsigned char	UINT8;

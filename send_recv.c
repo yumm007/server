@@ -25,6 +25,8 @@ static PKG_MTH_TYPE_T get_mth_type(char *data) {
 		return PKG_MTH_GET_PSN;
    else if (memcmp(data, PKG_MTH_GET_DEV_CONF_S, sizeof(PKG_MTH_GET_DEV_CONF_S)) == 0)
 		return PKG_MTH_GET_DEV_CONF;
+   else if (memcmp(data, PKG_MTH_ACTIVE_S, sizeof(PKG_MTH_ACTIVE_S)) == 0)
+		return PKG_MTH_ACTIVE;
     
    return PKG_MTH_UNKN;
 }
@@ -243,6 +245,11 @@ void process_socket(int sd) {
 						sendto(sd, buf, 1024, 0, (void *)&ca, sizeof(ca));
 						fprintf(stderr, "%s from IP %s.\n", (char *)pkg->id.pkg_from, inet_ntoa(ca.sin_addr));
 					}
+					break;
+				case PKG_MTH_ACTIVE:
+					pkg->header.pkg_type = MTH_RET;
+					strcat((char *)pkg->mth_data.mth_val, "Active=True;");
+					sendto(sd, buf, 1024, 0, (void *)&ca, sizeof(ca));
 					break;
 				default:
 					break;
