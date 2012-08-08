@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#if 0
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -9,7 +8,7 @@
 #include <net/if.h>
 #include <netinet/if_ether.h>
 
-char * get_mac(const char *ip_addr) {
+char * get_mac_from_net(const char *ip_addr) {
 	int     sockfd;
 	unsigned char *ptr;
 	struct arpreq arpreq;
@@ -37,7 +36,7 @@ char * get_mac(const char *ip_addr) {
 	}
 	sin = (struct sockaddr_in *) &arpreq.arp_pa;
 	memcpy(sin, &ss, sizeof(struct sockaddr_in));
-	strcpy(arpreq.arp_dev, "wlan0");
+	strcpy(arpreq.arp_dev, "eth1");
 	arpreq.arp_ha.sa_family = AF_UNSPEC;
 	if (ioctl(sockfd, SIOCGARP, &arpreq) < 0) {
 		perror("ioctl SIOCGARP: ");
@@ -50,7 +49,6 @@ char * get_mac(const char *ip_addr) {
 	close(sockfd);
 	return mac_buf;
 }
-#else
 
 char * get_mac(const char *ip_addr) {
 	static char mac_buf[] = "00-00-00-00-00-00";
@@ -60,4 +58,3 @@ char * get_mac(const char *ip_addr) {
 		memcpy(mac_buf, c+1, sizeof(mac_buf) - 1);
 	return mac_buf;
 }
-#endif

@@ -7,6 +7,8 @@
 #define PKG_MTH_GET_PSN_S 	"GetWorkerInfo"
 #define PKG_MTH_GET_DEV_CONF_S		"GetDevConfig"
 #define PKG_MTH_ACTIVE_S	"Active"
+#define PKG_MTH_WL_UPDATE_S "WirelessUpdate"
+#define PKG_MTH_GET_ALARM_S	"GetAlarmInfo"
 
 typedef enum PKG_MTH_TYPE {
     PKG_MTH_UNKN,
@@ -16,6 +18,8 @@ typedef enum PKG_MTH_TYPE {
     PKG_MTH_GET_PSN,
     PKG_MTH_GET_DEV_CONF,
 	 PKG_MTH_ACTIVE,
+	 PKG_MTH_WL_UPDATE,
+	 PKG_MTH_GET_ALARM_INFO,
 } PKG_MTH_TYPE_T;
 
 typedef unsigned char	UINT8;
@@ -27,6 +31,8 @@ typedef enum PKG_TYPE {
     MSG_RET	= 0x03,		//	reply message
     SND_MTH	= 0x04,		//	send method
     MTH_RET	= 0x05,		//	reply method
+	 SHR_LD	= 0x15,		// short package of locations
+	 MID_LD	= 0x16,		// medium long package of locations
 } PKG_TYPE_T;
 
 
@@ -84,8 +90,29 @@ typedef struct NW_PKG {
     
 } NW_PKG_T;
 
+typedef struct SHR_LD_DATA {
+	UINT8 pkg_ver[8];
+	UINT32 pkg_type;
+	unsigned int from_id;
+	UINT8 ap1_addr[6];
+	char ap1_val;
+	UINT8 ap2_addr[6];
+	char ap2_val;
+	UINT8 batt;
+	unsigned long times;
+} SHR_LD_DATA_T;
+
+typedef struct MID_LD_DATA {
+   SNDRCV_H_T 	header;
+	UINT8 from_id[32];
+	UINT8 pkg_val[200];
+	UINT32 pkg_len;
+} MID_LD_DATA_T;
+
+
 void open_socket(void);
 void process_socket(int sd);
-char *get_mac(const char *ip_addr);
+char *get_mac(const char *mac_addr);
+char *get_mac_from_net(const char *ip_addr);
 
 #endif

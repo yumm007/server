@@ -15,6 +15,8 @@ struct id_arr_t {
     struct sockaddr_in  address;
     time_t              next_wakeup;
 	time_t				last_recived;
+	int					total_recived;
+	int					total_missed;
 };
 
 

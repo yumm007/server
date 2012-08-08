@@ -68,6 +68,14 @@ static void print_online(void) {
 
 	fprintf(fp, "\n--------------TOTAL %d ON %d OFF-------------\n", on, off);
 
+	fprintf(fp, "\n--------------RECV AND MISS PACKAGE-------------\n");
+	for (i = 0; i < max; i++) {
+		next_time = id_arr[i].next_wakeup;
+		if (next_time != 0)
+			fprintf(fp, "[%d]%05d:%05d\t", i, id_arr[i].total_recived, id_arr[i].total_missed);
+	}
+	fprintf(fp, "\n");
+
 }
 void print_timestr(FILE *fp) {
 	time_t timep;

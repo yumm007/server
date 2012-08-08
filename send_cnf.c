@@ -72,11 +72,13 @@ static void process_one_line(char *line, char *tar) {
 enum {
     SEND_MSG,
     SEND_CNF,
+	 SEND_FW,
 };
 
 static const char *CMD_STR[] = {
 	"msg",
 	"conf",
+	"fw"
 	NULL,
 };
 
@@ -111,15 +113,16 @@ int main(int argc, char **argv) {
     time_t times;
 	 pid_t pid;
 
-    if (argc != 4) {
-	printf("usage: %s cmd 192.168.0.4 31013\n", argv[0]);
-	printf("cmd: conf msg");
-	return -2;
+    if (argc < 2) {
+		printf("usage: %s cmd 192.168.0.4 31013\n", argv[0]);
+		printf("usage: cat msg | %s msg 192.168.0.4 31013\n", argv[0]);
+		printf("usage: %s fw 192.168.0.4 31013\n", argv[0]);
+		return -2;
     }
 
     if ((sd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-	perror("socket:");
-	return -1;
+		perror("socket:");
+		return -1;
     }
 
     bzero(&sa, sizeof(sa));
@@ -148,6 +151,12 @@ int main(int argc, char **argv) {
 	    p[strlen(p)-1] = '\0';		//去掉回车符
 	    data[PKG_MSGT_OFFSET] = 0;	//普通短信
 	    break;
+	case SEND_FW:
+	    data[PKG_TYPE_OFFSET ] = 2;	//发送消息
+	    p = &data[PKG_MSGV_OFFSET];
+		 sprintf(p, "Server=192.168.169.234;Port=5678;");
+	    data[PKG_MSGT_OFFSET] = 0;	//普通短信
+		break;
 	default:
 	    goto ret;
 	    break;
