@@ -42,9 +42,8 @@ struct ap_table_t {
 	char *ap_mac;
 	int ap_loca;
 } ap_table[] = {
-	{"00:19:70:2b:d9:ed", 0},
-	{"00:19:70:2b:d9:ee", 100},
-	{"00:19:70:2b:d9:ef", 200},
+	{"00:5a:59:00:09:14", 0},
+	{"00:5a:59:00:06:60", 200},
 	{NULL, 0},
 };
 
@@ -60,8 +59,8 @@ static int theor_cal_val(struct location_data_t *loca) {
 	//RSSI = A - 10*n*lg(d)
 	//d = pow(10, (A - RSSI)/(10 * n))
 	//需要在实际环境下测量出常数A和与n, 暂时取A=-48.73, N = 1.9
-	#define A -30.73
-	#define N 1.3
+	#define A -51.73
+	#define N 1.9
 
 	int point1, point2;
 	int prov, next;
@@ -77,13 +76,8 @@ static int theor_cal_val(struct location_data_t *loca) {
 		memcpy(loca->mac1, loca->mac2,sizeof(loca->mac1));
 		memcpy(loca->mac2, mac, sizeof(loca->mac1));
 
-		rssi = loca->rssi1;
-		loca->rssi1 = loca->rssi2;
-		loca->rssi2 = loca->rssi1;
-	
-		tmp = prov;
-		prov = next;
-		next = prov;
+		rssi = loca->rssi1; loca->rssi1 = loca->rssi2; loca->rssi2 = loca->rssi1;
+		tmp = prov; prov = next; next = prov;
 	}
 
 	point1 = prov + pow(10, (A - loca->rssi1) / (10 * N));
@@ -106,7 +100,7 @@ int proc_location_data(const char *data) {
 	//从定位数据中提取出字段值
 	conver_location_data(&loca, data);
 	//for test
-	printf("[%d]\nA=%s\nAValue=%d\nB=%s\nBvalue=%d\nBattery=%.1f\nTime=%s\n", loca.id, loca.mac1, loca.rssi1, loca.mac2, loca.rssi2, loca.battery, ctime((&loca.timed)));
+	printf("[%d]A=%s;AValue=%d;B=%s;Bvalue=%d;\n", loca.id, loca.mac1, loca.rssi1, loca.mac2, loca.rssi2);
 	his = &loca_his[loca.id];
 
 	//预测位置 = 上次的速度*（当前数据包时间-上次数据包时间）+ 上次的位置
@@ -150,6 +144,7 @@ int proc_location_data(const char *data) {
 		theor_weight = 1.0;
 	} 
 
+	//当前位置 = 预测位置*预测权值 + RSSI计算位置*RSSI计算权值
 	current_location = predict_location * predict_weight + theor_location * theor_weight;
 	//更新static值：最后一笔数据时间，最后一次的速度，最后一次的位置
 	his->last_data_time = loca.timed;
@@ -161,13 +156,15 @@ int proc_location_data(const char *data) {
 
 //for test
 #if 1
+#include <stdlib.h>
 int main(void) {
-	char *data = "[11012];A=00:19:70:2b:d9:ee;AValue=-50;B=00:19:70:2b:d9:ef;BValue=-48;Battery=4.1;120522151004";
-	struct location_data_t loca;
-	memset(&loca, 0, sizeof(loca));
+	char *data = NULL;
+	size_t n = 1024;
 
-	proc_location_data(data);
+	while (getline(&data, &n, stdin) != -1)
+		proc_location_data(data);
 
+	free(data);
 	return 0;
 }
 
